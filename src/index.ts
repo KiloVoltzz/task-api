@@ -1,17 +1,35 @@
+import 'dotenv/config';
 import dns from 'node:dns';
 dns.setServers(['8.8.8.8', '1.1.1.1']);
-import 'dotenv/config';
 import express from 'express';
 import mongoose from 'mongoose';
+import {
+    Task
+} from './models/task.js';
 
 const app = express();
 const PORT = 3000;
+
+app.use(express.json())
 
 app.get('/health', (req, res) => {
     res.json({
         status: 'ok'
     });
 });
+
+app.post('/tasks', async (req, res) => {
+    try {
+        const task = await Task.create({
+            title: req.body.title
+        })
+        res.status(201).json(task);
+    } catch (err) {
+        res.status(400).json({
+            error: (err as Error).message
+        });
+    }
+})
 
 async function start() {
     const uri = process.env.MONGODB_URI;
