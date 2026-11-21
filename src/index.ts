@@ -5,8 +5,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import {
     Task
-} from './models/task.js';
-
+} from './models/Task.js';
 const app = express();
 const PORT = 3000;
 
@@ -26,6 +25,19 @@ app.post('/tasks', async (req, res) => {
         res.status(201).json(task);
     } catch (err) {
         res.status(400).json({
+            error: (err as Error).message
+        });
+    }
+})
+
+app.get('/tasks', async (req, res) => {
+    try {
+        const tasks = await Task.find().sort({
+            createdAt: -1
+        })
+        res.json(tasks);
+    } catch (err) {
+        res.status(500).json({
             error: (err as Error).message
         });
     }
