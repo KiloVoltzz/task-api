@@ -11,6 +11,13 @@ const PORT = Number(process.env.PORT) || 3000;
 
 app.use(express.json())
 
+app.get('/', (req, res) => {
+    res.json({
+        name: 'task-api',
+        endpoints: ['GET /health', 'GET /tasks', 'POST /tasks'],
+    });
+});
+
 app.get('/health', (req, res) => {
     res.json({
         status: 'ok'
